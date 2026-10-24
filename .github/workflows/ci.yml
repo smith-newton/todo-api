@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      PYTHONPATH: .
       DATABASE_URL: "sqlite:///./ci_test.db"
       JWT_SECRET_KEY: "ci-dummy-jwt-secret-key-change-in-production-only"
 
@@ -32,4 +33,4 @@ jobs:
 
       - name: Run Test Suite with Coverage
         run: |
-          pytest --cov=app --cov-report=term-missing -v
+          python -m pytest --cov=app --cov-report=term-missing -v
