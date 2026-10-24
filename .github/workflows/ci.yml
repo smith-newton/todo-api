@@ -1,0 +1,35 @@
+name: FastAPI CI Pipeline
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test:
+    name: Run Automated Tests & Coverage
+    runs-on: ubuntu-latest
+
+    env:
+      DATABASE_URL: "sqlite:///./ci_test.db"
+      JWT_SECRET_KEY: "ci-dummy-jwt-secret-key-change-in-production-only"
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Test Suite with Coverage
+        run: |
+          pytest --cov=app --cov-report=term-missing -v
